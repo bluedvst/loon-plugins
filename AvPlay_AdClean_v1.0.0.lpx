@@ -1,6 +1,6 @@
 #!name=AvPlay 广告与追踪过滤
-#!desc=AvPlay 1.9.1：移除首页横幅与“应用推荐”的动态 ads 配置，并拦截已确认的追踪请求。需在插件详情中指定 Loon 证书。
-#!version=1.1.0
+#!desc=AvPlay 1.9.1：移除首页横幅与“应用推荐”等动态广告位，并拦截已确认的追踪请求。需在插件详情中指定 Loon 证书。
+#!version=1.2.0
 #!author=Codex
 
 [URL Rewrite]
@@ -18,7 +18,7 @@
 ^https?:\/\/[^\/]+\/.*[?&](?:ad|ads|ad_id|adIds|advertisement|banner|placement)=[^&]* - reject
 
 [Script]
-# 动态广告没有固定域名；脚本只会改写带 homeLink / urls / ads 特征的 AvPlay 配置 JSON。
+# 动态广告没有固定域名；脚本会递归清理 JSON 中的广告位、横幅位和应用推荐位。
 http-response ^https?:\/\/.* script-path=https://raw.githubusercontent.com/bluedvst/loon-plugins/refs/heads/main/AvPlay_AdClean.js, requires-body=1, max-size=524288, timeout=5, tag=AvPlay 广告配置清理
 
 [MITM]
