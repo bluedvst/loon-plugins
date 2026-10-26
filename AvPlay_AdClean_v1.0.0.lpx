@@ -1,0 +1,21 @@
+#!name=AvPlay 广告与追踪过滤
+#!desc=AvPlay 1.9.1：拦截已确认的广告分析、崩溃上报与动态广告接口；不拦截 JavDB、MissAV、Jable、AV01、MemoJav 等播放站点。
+#!version=1.0.0
+#!author=Codex
+
+[URL Rewrite]
+# 已从 AvPlay 1.9.1 的 IPA 中确认的 Mixpanel 行为分析接口
+^https?:\/\/api\.mixpanel\.com\/(?:track|engage|groups|decide|record)(?:\/|\?|$).* - reject
+
+# Firebase 行为分析、崩溃上报与远程设置；不影响影片资源请求
+^https?:\/\/[^\/]+\.app-measurement\.com\/.* - reject
+^https?:\/\/firebaselogging\.googleapis\.com\/.* - reject
+^https?:\/\/crashlyticsreports-pa\.googleapis\.com\/.* - reject
+^https?:\/\/firebase-settings\.crashlytics\.com\/.* - reject
+
+# 常见的独立广告资源接口。仅匹配路径或查询参数明确标记为广告的请求，避免误伤站点正文与视频。
+^https?:\/\/[^\/]+\/(?:ads?|advertisement|banner|placements?)(?:\/|\?|$).* - reject
+^https?:\/\/[^\/]+\/.*[?&](?:ad|ads|ad_id|adIds|advertisement|banner|placement)=[^&]* - reject
+
+[MITM]
+hostname = api.mixpanel.com, *.app-measurement.com, firebaselogging.googleapis.com, crashlyticsreports-pa.googleapis.com, firebase-settings.crashlytics.com
