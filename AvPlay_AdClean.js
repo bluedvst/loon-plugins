@@ -1,48 +1,32 @@
-/*
- * AvPlay 广告配置清理器
- * 仅清理 JSON 中的广告位、横幅位和应用推荐位。
- */
-const body = $response.body;
-const headers = $response.headers || {};
-const contentType = String(headers["Content-Type"] || headers["content-type"] || "").toLowerCase();
-
-if (!body || (!contentType.includes("json") && !/^[\s\r\n]*[\[{]/.test(body))) {
-  $done({});
-} else {
+/* AvPlay 1.9.1 / v1.5.0: HAR-confirmed configuration endpoint only. */
+(function () {
+  if (!/^https:\/\/www\.javrocket\.top\/avplayground_config\.json(?:\?|$)/.test($request.url)) {
+    $done({}); return;
+  }
+  if (typeof $response === "undefined") {
+    const headers = Object.assign({}, $request.headers);
+    Object.keys(headers).forEach(function (key) {
+      if (/^(if-none-match|if-modified-since|cache-control|pragma)$/i.test(key)) delete headers[key];
+    });
+    headers["Cache-Control"] = "no-cache";
+    $done({ headers: headers }); return;
+  }
   try {
-    const payload = JSON.parse(body);
-    let changed = false;
-
-    const clearSlot = (container, key) => {
-      if (!Object.prototype.hasOwnProperty.call(container, key)) return;
-      const current = container[key];
-      if (Array.isArray(current)) container[key] = [];
-      else if (current && typeof current === "object") container[key] = {};
-      else container[key] = null;
-      changed = true;
-    };
-
-    const walk = (value) => {
-      if (Array.isArray(value)) {
-        value.forEach(walk);
-        return;
-      }
-      if (!value || typeof value !== "object") return;
-
-      // 广告数据有时被包在 data / payload 等下一层，不能假定字段一定同层。
-      ["ads", "adIds", "placements", "banners", "appAdBanner", "appRecommendations"].forEach(
-        (key) => clearSlot(value, key)
-      );
-
-      Object.keys(value).forEach((key) => walk(value[key]));
-    };
-
-    walk(payload);
-    if (changed && typeof console !== "undefined") {
-      console.log(`[AvPlay AdClean] cleaned: ${(typeof $request !== "undefined" && $request.url) || "response"}`);
+    const config = JSON.parse($response.body);
+    if (!config.ads || typeof config.ads !== "object" || Array.isArray(config.ads)) {
+      $done({}); return;
     }
-    $done(changed ? { body: JSON.stringify(payload) } : {});
-  } catch (_) {
+    config.ads.data = [];
+    const placements = config.ads.placements;
+    if (placements && typeof placements === "object") {
+      Object.keys(placements).forEach(function (key) {
+        if (placements[key] && typeof placements[key] === "object") placements[key].adIds = [];
+      });
+    }
+    console.log("[AvPlay AdClean 1.5.0] cleared ad data and placement IDs");
+    $done({ body: JSON.stringify(config) });
+  } catch (error) {
+    console.log("[AvPlay AdClean 1.5.0] configuration unchanged: " + String(error));
     $done({});
   }
-}
+})();
