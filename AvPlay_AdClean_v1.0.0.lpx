@@ -1,6 +1,6 @@
 #!name=AvPlay 广告与追踪过滤
-#!desc=AvPlay 1.9.1：安全拦截已识别的推广来源与追踪请求；不需要 MITM 证书。
-#!version=1.3.0
+#!desc=AvPlay 1.9.1：拦截 HAR 已确认的应用推荐横幅与追踪；不需要 MITM 证书。
+#!version=1.4.0
 #!author=Codex
 
 [URL Rewrite]
@@ -18,6 +18,10 @@
 ^https?:\/\/[^\/]+\/.*[?&](?:ad|ads|ad_id|adIds|advertisement|banner|placement)=[^&]* - reject
 
 [Rule]
+# HAR 已确认：应用推荐横幅与图标均通过此图片代理加载。按域名拒绝可直接去除图片，
+# 不使用 HTTPS 解密，因而不会触发 Loon CA 证书提示。
+DOMAIN,2img.net,REJECT
+
 # 来自 AvPlay「应用推荐」截图中已识别的推广站点；规则按域名拒绝，无需解密 HTTPS。
 DOMAIN-SUFFIX,91app1.com,REJECT
 DOMAIN-SUFFIX,91ab.me,REJECT
