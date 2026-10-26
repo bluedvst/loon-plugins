@@ -1,6 +1,6 @@
 #!name=AvPlay 广告与追踪过滤
-#!desc=AvPlay 1.9.1：移除首页横幅与“应用推荐”等动态广告位，并拦截已确认的追踪请求。需在插件详情中指定 Loon 证书。
-#!version=1.2.0
+#!desc=AvPlay 1.9.1：安全拦截已识别的推广来源与追踪请求；不需要 MITM 证书。
+#!version=1.3.0
 #!author=Codex
 
 [URL Rewrite]
@@ -17,10 +17,10 @@
 ^https?:\/\/[^\/]+\/(?:ads?|advertisement|banner|placements?)(?:\/|\?|$).* - reject
 ^https?:\/\/[^\/]+\/.*[?&](?:ad|ads|ad_id|adIds|advertisement|banner|placement)=[^&]* - reject
 
-[Script]
-# 动态广告没有固定域名；脚本会递归清理 JSON 中的广告位、横幅位和应用推荐位。
-http-response ^https?:\/\/.* script-path=https://raw.githubusercontent.com/bluedvst/loon-plugins/refs/heads/main/AvPlay_AdClean.js, requires-body=1, max-size=524288, timeout=5, tag=AvPlay 广告配置清理
-
-[MITM]
-# 动态广告配置的域名未写死在 IPA 中；为精准改写响应体需要解密 HTTPS。
-hostname = *
+[Rule]
+# 来自 AvPlay「应用推荐」截图中已识别的推广站点；规则按域名拒绝，无需解密 HTTPS。
+DOMAIN-SUFFIX,91app1.com,REJECT
+DOMAIN-SUFFIX,91ab.me,REJECT
+DOMAIN-SUFFIX,bluemv.tips,REJECT
+DOMAIN-SUFFIX,haijiao.fun,REJECT
+DOMAIN-SUFFIX,lygay.com,REJECT
