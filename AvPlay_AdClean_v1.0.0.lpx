@@ -1,30 +1,11 @@
-#!name=AvPlay 广告与追踪过滤
-#!desc=AvPlay 1.9.1：拦截 HAR 已确认的应用推荐横幅与追踪；不需要 MITM 证书。
-#!version=1.4.0
+#!name=AvPlay 广告配置清理
+#!desc=AvPlay 1.9.1：清空应用推荐与轮播广告数据。需启用 MITM 并安装、完全信任 Loon CA；仅解密 www.javrocket.top。
+#!version=1.5.0
 #!author=Codex
 
-[URL Rewrite]
-# 已从 AvPlay 1.9.1 的 IPA 中确认的 Mixpanel 行为分析接口
-^https?:\/\/api\.mixpanel\.com\/(?:track|engage|groups|decide|record)(?:\/|\?|$).* - reject
+[Script]
+http-request ^https:\/\/www\.javrocket\.top\/avplayground_config\.json(?:\?|$) script-path=https://raw.githubusercontent.com/bluedvst/loon-plugins/main/AvPlay_AdClean.js?v=1.5.0,timeout=10,tag=AvPlay配置缓存刷新
+http-response ^https:\/\/www\.javrocket\.top\/avplayground_config\.json(?:\?|$) script-path=https://raw.githubusercontent.com/bluedvst/loon-plugins/main/AvPlay_AdClean.js?v=1.5.0,requires-body=true,timeout=10,tag=AvPlay广告配置清理
 
-# Firebase 行为分析、崩溃上报与远程设置；不影响影片资源请求
-^https?:\/\/[^\/]+\.app-measurement\.com\/.* - reject
-^https?:\/\/firebaselogging\.googleapis\.com\/.* - reject
-^https?:\/\/crashlyticsreports-pa\.googleapis\.com\/.* - reject
-^https?:\/\/firebase-settings\.crashlytics\.com\/.* - reject
-
-# 常见的独立广告资源接口。仅匹配路径或查询参数明确标记为广告的请求，避免误伤站点正文与视频。
-^https?:\/\/[^\/]+\/(?:ads?|advertisement|banner|placements?)(?:\/|\?|$).* - reject
-^https?:\/\/[^\/]+\/.*[?&](?:ad|ads|ad_id|adIds|advertisement|banner|placement)=[^&]* - reject
-
-[Rule]
-# HAR 已确认：应用推荐横幅与图标均通过此图片代理加载。按域名拒绝可直接去除图片，
-# 不使用 HTTPS 解密，因而不会触发 Loon CA 证书提示。
-DOMAIN,2img.net,REJECT
-
-# 来自 AvPlay「应用推荐」截图中已识别的推广站点；规则按域名拒绝，无需解密 HTTPS。
-DOMAIN-SUFFIX,91app1.com,REJECT
-DOMAIN-SUFFIX,91ab.me,REJECT
-DOMAIN-SUFFIX,bluemv.tips,REJECT
-DOMAIN-SUFFIX,haijiao.fun,REJECT
-DOMAIN-SUFFIX,lygay.com,REJECT
+[MITM]
+hostname = www.javrocket.top
