@@ -1,0 +1,9 @@
+#!name=小黑盒隐藏加号（测试版）
+#!desc=尝试将 tips_state 中的 post_tab 设为 0；是否控制底部加号尚待验证。
+#!version=0.1.0
+
+[URL Rewrite]
+^https:\/\/api\.xiaoheihe\.cn\/account\/tips_state\/?(?:\?|$) response-body-json-replace result.post_tab 0
+
+[MITM]
+hostname = api.xiaoheihe.cn
