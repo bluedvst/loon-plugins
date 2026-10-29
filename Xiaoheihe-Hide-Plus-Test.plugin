@@ -1,9 +1,9 @@
 #!name=小黑盒隐藏加号（测试版）
-#!desc=尝试将 tips_state 中的 post_tab 设为 0；是否控制底部加号尚待验证。
-#!version=0.1.0
+#!desc=同时修改外层及 tips_data 内的 post_tab；效果待验证。
+#!version=0.2.0
 
-[URL Rewrite]
-^https:\/\/api\.xiaoheihe\.cn\/account\/tips_state\/?(?:\?|$) response-body-json-replace result.post_tab 0
+[Script]
+http-response ^https:\/\/api\.xiaoheihe\.cn\/account\/tips_state\/?(?:\?|$) script-path=https://raw.githubusercontent.com/bluedvst/loon-plugins/main/Xiaoheihe-Hide-Plus-Test.js, requires-body=true, timeout=10, tag=小黑盒隐藏加号测试
 
 [MITM]
 hostname = api.xiaoheihe.cn
