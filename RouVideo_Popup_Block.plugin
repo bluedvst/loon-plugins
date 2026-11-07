@@ -1,18 +1,22 @@
 #!name=肉视频悬浮广告拦截
-#!desc=拦截抓包中出现的弹窗、浮动广告和广告 iframe 来源；相关域名在其他应用也会被拦截。
+#!desc=拦截抓包中出现的弹窗、浮动广告及广告 iframe；部分域名规则同时影响其他应用。
 #!author=bluedvst
-#!version=1.2.0
+#!version=1.3.0
 
 [Rule]
-# 抓包确认的广告 iframe 及其内容接口
 DOMAIN,cdn-fc.com,REJECT
 DOMAIN,fh-wgt.com,REJECT
-# 抓包确认的直播广告脚本和接口
 DOMAIN,creative.greentrafsa.com,REJECT
 DOMAIN,go.greentrafsa.com,REJECT
 DOMAIN,go.mnaspm.com,REJECT
 DOMAIN,a.realsrv.com,REJECT
-# 抓包中包含 zfgloadedpopup 的弹窗脚本来源
 DOMAIN,3pkf5m0gd.com,REJECT
 DOMAIN,holahupa.com,REJECT
 DOMAIN,nimhuemark.com,REJECT
+
+[Rewrite]
+# 抓包中确认是视频悬浮广告播放器的脚本，仅拦截脚本路径，不拦截同域名的其他路径。
+^https?:\/\/ptelastaxo\.com\/b\.[^?]* reject-200
+
+[MITM]
+hostname = ptelastaxo.com
