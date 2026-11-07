@@ -1,7 +1,7 @@
 #!name=肉视频悬浮广告拦截
-#!desc=拦截抓包中出现的弹窗、浮动广告及广告 iframe；部分域名规则同时影响其他应用。
+#!desc=拦截抓包确认的弹窗广告来源，并处理狭窄的 Radix 弹窗残留；部分域名规则影响其他应用。
 #!author=bluedvst
-#!version=1.3.0
+#!version=1.4.0
 
 [Rule]
 DOMAIN,cdn-fc.com,REJECT
@@ -15,8 +15,11 @@ DOMAIN,holahupa.com,REJECT
 DOMAIN,nimhuemark.com,REJECT
 
 [Rewrite]
-# 抓包中确认是视频悬浮广告播放器的脚本，仅拦截脚本路径，不拦截同域名的其他路径。
 ^https?:\/\/ptelastaxo\.com\/b\.[^?]* reject-200
+^https?:\/\/(?:www\.)?rouvmo\.com(?:\/|$) header-replace Accept-Encoding identity
+
+[Script]
+http-response ^https?:\/\/(?:www\.)?rouvmo\.com(?:[\/:?]|$) script-path=https://raw.githubusercontent.com/bluedvst/loon-plugins/main/RouVideo_Line_Fix.js,requires-body=true,timeout=15,tag=肉视频横线修复
 
 [MITM]
-hostname = ptelastaxo.com
+hostname = ptelastaxo.com, rouvmo.com, www.rouvmo.com
