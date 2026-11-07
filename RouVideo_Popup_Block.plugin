@@ -1,13 +1,18 @@
 #!name=肉视频悬浮广告拦截
-#!desc=拦截抓包中出现的悬浮及广告 iframe 来源；相关域名的访问在其他应用也会受影响。
+#!desc=拦截抓包中出现的弹窗、浮动广告和广告 iframe 来源；相关域名在其他应用也会被拦截。
 #!author=bluedvst
-#!version=1.1.0
+#!version=1.2.0
 
 [Rule]
-# 抓包中成功加载的广告 iframe 与其广告内容接口
+# 抓包确认的广告 iframe 及其内容接口
 DOMAIN,cdn-fc.com,REJECT
 DOMAIN,fh-wgt.com,REJECT
-# 抓包中出现过的悬浮直播及浮动视频广告来源
+# 抓包确认的直播广告脚本和接口
 DOMAIN,creative.greentrafsa.com,REJECT
+DOMAIN,go.greentrafsa.com,REJECT
 DOMAIN,go.mnaspm.com,REJECT
 DOMAIN,a.realsrv.com,REJECT
+# 抓包中包含 zfgloadedpopup 的弹窗脚本来源
+DOMAIN,3pkf5m0gd.com,REJECT
+DOMAIN,holahupa.com,REJECT
+DOMAIN,nimhuemark.com,REJECT
