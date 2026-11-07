@@ -1,12 +1,13 @@
 #!name=肉视频悬浮广告拦截
-#!desc=配合修复版 IPA，拦截抓包中出现的悬浮直播和视频广告脚本域名；规则会对其他应用中的相同域名生效。
+#!desc=拦截抓包中出现的悬浮及广告 iframe 来源；相关域名的访问在其他应用也会受影响。
 #!author=bluedvst
-#!version=1.0.0
+#!version=1.1.0
 
 [Rule]
-# Stripchat 直播悬浮广告脚本；抓包：/widgets/Spot/lib-auto.js
+# 抓包中成功加载的广告 iframe 与其广告内容接口
+DOMAIN,cdn-fc.com,REJECT
+DOMAIN,fh-wgt.com,REJECT
+# 抓包中出现过的悬浮直播及浮动视频广告来源
 DOMAIN,creative.greentrafsa.com,REJECT
-# SmartPop 广告脚本跳转域名
 DOMAIN,go.mnaspm.com,REJECT
-# ExoClick 浮动视频广告脚本；抓包：/video-slider.js
 DOMAIN,a.realsrv.com,REJECT
