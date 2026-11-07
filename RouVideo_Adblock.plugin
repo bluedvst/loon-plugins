@@ -1,0 +1,23 @@
+#!name=肉视频去广告（实验版）
+#!desc=依据 luestr 的 rou.video 网页脚本拦截已知广告网络及广告脚本；IPA 的实际效果有待验证。
+#!author=Adapted from luestr/userscripts
+#!version=1.0.0
+
+# 广告域名规则对整个设备生效，并非仅限肉视频 App。
+[Rule]
+DOMAIN-SUFFIX,magsrv.com,REJECT
+DOMAIN-SUFFIX,tsyndicate.com,REJECT
+DOMAIN-SUFFIX,ptelastaxo.com,REJECT
+DOMAIN-SUFFIX,clammyendearedkeg.com,REJECT
+DOMAIN-SUFFIX,clickadu.com,REJECT
+DOMAIN-SUFFIX,clickadu.net,REJECT
+DOMAIN-SUFFIX,mnaspm.com,REJECT
+DOMAIN-SUFFIX,stripchat.com,REJECT
+
+# 第一方脚本路径来自网页脚本；IPA 域名上的对应路径仅作尝试。
+[Rewrite]
+^https?:\/\/(?:www\.)?(?:rou\.video|rouvmo\.com|roumanw\.com)\/js\/(?:clickadu|hilltop|stripchat)\.js(?:\?|$) reject-200
+^https?:\/\/(?:www\.)?(?:rou\.video|rouvmo\.com|roumanw\.com)\/assets\/vast-client\.min-[^\/?]+\.js(?:\?|$) reject-200
+
+[MITM]
+hostname = rou.video, www.rou.video, rouvmo.com, www.rouvmo.com, roumanw.com, www.roumanw.com
