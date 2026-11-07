@@ -1,27 +1,13 @@
-#!name=肉视频去广告
-#!desc=根据抓包清理网页广告位并拦截已知广告请求；适用于 WebView 页面，效果需实机验证。
+#!name=肉视频去广告（保守版）
+#!desc=仅隐藏网页中的已知广告链接，保留播放器和所有视频请求。更新后请重启 App。
 #!author=Adapted from luestr/userscripts
-#!version=1.1.0
-
-[Rule]
-DOMAIN-SUFFIX,magsrv.com,REJECT
-DOMAIN-SUFFIX,realsrv.com,REJECT
-DOMAIN-SUFFIX,tsyndicate.com,REJECT
-DOMAIN-SUFFIX,ptelastaxo.com,REJECT
-DOMAIN-SUFFIX,clammyendearedkeg.com,REJECT
-DOMAIN-SUFFIX,clickadu.com,REJECT
-DOMAIN-SUFFIX,clickadu.net,REJECT
-DOMAIN-SUFFIX,mnaspm.com,REJECT
-DOMAIN-SUFFIX,stripchat.com,REJECT
+#!version=1.2.0
 
 [Rewrite]
-# 抓包显示页面使用 zstd，要求服务器返回便于修改的未压缩内容。
 ^https?:\/\/(?:www\.)?(?:rou\.video|rouvmo\.com|roumanw\.com)(?:\/|$) header-replace Accept-Encoding identity
-^https?:\/\/(?:www\.)?(?:rou\.video|rouvmo\.com|roumanw\.com)\/js\/(?:clickadu|hilltop|stripchat)\.js(?:\?|$) reject-200
-^https?:\/\/(?:www\.)?(?:rou\.video|rouvmo\.com|roumanw\.com)\/assets\/vast-client\.min-[^\/?]+\.js(?:\?|$) reject-200
 
 [Script]
-http-response ^https?:\/\/(?:www\.)?(?:rou\.video|rouvmo\.com|roumanw\.com)(?:[\/:?]|$) script-path=https://raw.githubusercontent.com/bluedvst/loon-plugins/main/RouVideo_Adblock.js,requires-body=true,timeout=15,tag=肉视频网页广告清理
+http-response ^https?:\/\/(?:www\.)?(?:rou\.video|rouvmo\.com|roumanw\.com)(?:[\/:?]|$) script-path=https://raw.githubusercontent.com/bluedvst/loon-plugins/main/RouVideo_Adblock_safe.js,requires-body=true,timeout=15,tag=肉视频广告隐藏
 
 [MITM]
 hostname = rou.video, www.rou.video, rouvmo.com, www.rouvmo.com, roumanw.com, www.roumanw.com
