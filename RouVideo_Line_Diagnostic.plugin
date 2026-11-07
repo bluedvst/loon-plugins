@@ -1,0 +1,9 @@
+#!name=肉视频横线检查（临时）
+#!desc=显示横线附近的网页元素信息，供截图排查；排查后请关闭。
+#!version=1.0.0
+[Rewrite]
+^https?:\/\/(?:www\.)?rouvmo\.com(?:\/|$) header-replace Accept-Encoding identity
+[Script]
+http-response ^https?:\/\/(?:www\.)?rouvmo\.com(?:[\/:?]|$) script-path=https://raw.githubusercontent.com/bluedvst/loon-plugins/main/RouVideo_Line_Diagnostic.js,requires-body=true,timeout=15,tag=肉视频横线检查
+[MITM]
+hostname = rouvmo.com, www.rouvmo.com
